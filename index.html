@@ -15,13 +15,15 @@
     <script>
         // データベース接続
         var sampledb = openDatabase('test', '1.0', 'test', '10');
+        var dd = new Date();
+        var timestamp = dd.getFullYear() + "/" + (dd.getMonth() + 1) + "/" + dd.getDate() + "/" + dd.getHours() + ":" + dd.getMinutes() + ":" + dd.getSeconds();
 
         // 実行
         sampledb.transaction(
             function(tr) {
                 // tr.executeSql('CREATE TABLE test (date date, status varchar(5));', []); // []内にはSQL文中の"?"に対応する値を入れる
 
-                // tr.executeSql("INSERT INTO test VALUES( '" + timestamp + " ','ON');", []);
+                tr.executeSql("INSERT INTO test VALUES( '" + timestamp + " ','ON');", []);
 
             },
             function(error) {
