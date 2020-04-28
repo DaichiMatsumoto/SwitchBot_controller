@@ -5,10 +5,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heater Controller</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
     <p id="power"></p>
+
+    <script>
+        var url = "https://daichimatsumoto.github.io/SwitchBot_controller/log.json";
+
+
+        // データベース接続
+        var sampledb = openDatabase('test', '1.0', 'test', '10');
+
+        // 実行
+        sampledb.transaction(
+            function(tr) {
+                tr.executeSql('CREATE TABLE test (date date, status varchar(5));', []); // []内にはSQL文中の"?"に対応する値を入れる
+            },
+            function(error) {
+                // エラー発生時の処理。必要に応じて書き足す
+            },
+            function() {
+                // 正常終了時の処理。必要に応じて書き足す
+            }
+        );
+    </script>
 </body>
 
 </html>
