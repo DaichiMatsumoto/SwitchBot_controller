@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heater Controller</title>
+</head>
+
+<body>
+    <p id="power">ON</p>
+
+    <script>
+        var power = document.getElementById('power');
+        if (power.innerText == "ON") {
+            power.textContent = "OFF"
+        } else {
+            power.textContent = "ON"
+        }
+    </script>
+</body>
+
+</html>
