@@ -8,14 +8,14 @@
 </head>
 
 <body>
-    <p id="power">ON</p>
+    <p id="power"></p>
 
     <script>
         var power = document.getElementById('power');
         if (power.innerText == "ON") {
-            power.textContent = "OFF"
+            power.innerText = "OFF"
         } else {
-            power.textContent = "ON"
+            power.innerText = "ON"
         }
     </script>
 </body>
