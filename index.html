@@ -14,8 +14,7 @@
     <p class="log"></p>
 
     <script>
-        var query = location.search;
-        var value = query.split('=');
+        var value = getParam('value');
 
         var elem = document.getElementById("power");
 
@@ -66,13 +65,13 @@
                 }
                 // objectStoreを取得
             const objectStore = transaction.objectStore("myObjectStore")
-            if (value[1] == 'true') {
+            if (value == 'true') {
                 objectStore.put(dataON);
                 elem.innerText = "ON";
                 console.log('success');
             } else {
                 objectStore.put(dataOFF);
-                elem.innerText = "ON";
+                elem.innerText = "OFF";
                 console.log('success');
             }
             //表示
@@ -91,6 +90,16 @@
                 // 接続失敗時の処理
                 console.log('err');
             }
+        }
+
+        function getParam(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
     </script>
 
