@@ -10,13 +10,15 @@
 
 <body>
 
-    <p id="power">OFF</p>
+    <p id="power">OFF</p><br>
+    <p id="log"></p>
 
     <script>
         var query = location.search;
         var value = query.split('=');
 
         var elem = document.getElementById("power");
+        var elem1 = document.getElementById("log");
 
         // データベース接続
         var sampledb = openDatabase('test', '1.0', 'test', '10');
@@ -31,6 +33,14 @@
 
                     tr.executeSql("INSERT INTO test VALUES( '" + timestamp + " ','ON');", []);
                     elem.innerText = "ON";
+                    tr.executeSql(
+                        'SELECT * FROM meibo;', [],
+                        function(tr, r) {
+                            for (var i = 0; i < r.rows.length; i++) {
+                                elem1.innerText = 'date:' + r.rows.item(i).date + ' status:' + r.rows.item(i).status;
+                            }
+                        }
+                    );
 
                 },
                 function(error) {
