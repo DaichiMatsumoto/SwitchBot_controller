@@ -16,6 +16,8 @@
         var query = location.search;
         var value = query.split('=');
 
+        var elem = document.getElementById("power");
+
         // データベース接続
         var sampledb = openDatabase('test', '1.0', 'test', '10');
         var dd = new Date();
@@ -28,6 +30,7 @@
                     // tr.executeSql('CREATE TABLE test (date date, status varchar(5));', []); // []内にはSQL文中の"?"に対応する値を入れる
 
                     tr.executeSql("INSERT INTO test VALUES( '" + timestamp + " ','ON');", []);
+                    elem.innerText = "ON";
 
                 },
                 function(error) {
