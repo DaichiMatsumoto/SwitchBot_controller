@@ -24,59 +24,67 @@
         var dd = new Date();
         var timestamp = dd.getFullYear() + "/" + (dd.getMonth() + 1) + "/" + dd.getDate() + "/" + dd.getHours() + ":" + dd.getMinutes() + ":" + dd.getSeconds();
 
-        if (value[1] == 'true') {
-            // 指定したDBへ接続(ない場合は作成)
-            const request = indexedDB.open('myDatabase')
-                // 作成 or バージョンを更新した場合
-            request.onupgradeneeded = event => {
-                    // dbを取得
-                    const db = event.target.result
-                        // objectStoreを作成
-                    const objectStore = db.createObjectStore("myObjectStore", {
-                        keyPath: "id",
-                        autoIncrement: true
-                    })
-                    objectStore.createIndex("date", "date", {
+
+        // 指定したDBへ接続(ない場合は作成)
+        const request = indexedDB.open('myDatabase')
+            // 作成 or バージョンを更新した場合
+        request.onupgradeneeded = event => {
+                // dbを取得
+                const db = event.target.result
+                    // objectStoreを作成
+                const objectStore = db.createObjectStore("myObjectStore", {
+                    keyPath: "id",
+                    autoIncrement: true
+                })
+                objectStore.createIndex("date", "date", {
+                    unique: false
+                })
+                objectStore.createIndex("status", "status", {
                         unique: false
                     })
-                    objectStore.createIndex("status", "status", {
-                            unique: false
-                        })
-                        // db.close();
+                    // db.close();
+            }
+            // 成功の場合
+        request.onsuccess = event => {
+            // 接続成功時の処理
+            var dataON = {
+                date: timestamp,
+                status: 'ON'
+            };
+            var dataOFF = {
+                date: timestamp,
+                status: 'OFF'
+            };
+            const db = event.target.result
+                // transactionを取得
+            const transaction = db.transaction(["myObjectStore"], "readwrite") // 追加するので"readwrite"を指定
+            transaction.oncomplete = e => {
+                console.log("success!!")
+            }
+            transaction.onerror = e => {
+                    console.error("error: ", e)
                 }
-                // 成功の場合
-            request.onsuccess = event => {
-                // 接続成功時の処理
-                var data = {
-                    date: timestamp,
-                    status: 'ON'
-                };
-                const db = event.target.result
-                    // transactionを取得
-                const transaction = db.transaction(["myObjectStore"], "readwrite") // 追加するので"readwrite"を指定
-                transaction.oncomplete = e => {
-                    console.log("success!!")
-                }
-                transaction.onerror = e => {
-                        console.error("error: ", e)
-                    }
-                    // objectStoreを取得
-                const objectStore = transaction.objectStore("myObjectStore")
-                objectStore.put(data);
-
+                // objectStoreを取得
+            const objectStore = transaction.objectStore("myObjectStore")
+            if (value[1] == 'true') {
+                objectStore.put(dataON);
                 elem.innerText = "ON";
-
                 console.log('success');
-                //表示
-                objectStore.openCursor().onsuccess = function(event) {
-                    const row = event.target.result;
-                    if (row) {
-                        $(".log").append("<p>date: " + row.value.date + " status: " + row.value.status);
-                        console.log(row.value);
-                        row.continue();
-                    }
+            } else {
+                objectStore.put(dataOFF);
+                elem.innerText = "ON";
+                console.log('success');
+            }
+            //表示
+            objectStore.openCursor().onsuccess = function(event) {
+                const row = event.target.result;
+                if (row) {
+                    $(".log").append("<p>date: " + row.value.date + " status: " + row.value.status);
+                    console.log(row.value);
+                    row.continue();
                 }
             }
+
 
             // 失敗の場合
             request.onerror = event => {
